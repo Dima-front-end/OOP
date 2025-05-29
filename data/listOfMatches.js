@@ -1,4 +1,4 @@
-const matches = [
+const listOfMatches = [
   {
     id: 1,
     teamA: "Barcelona",
@@ -171,4 +171,4 @@ const matches = [
   },
 ];
 
-module.exports = liatOfMatches;
+module.exports = listOfMatches;

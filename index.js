@@ -1,9 +1,9 @@
-const liatOfMatches = require('./data/listOfMatches.js');
+const listOfMatches = require('./data/listOfMatches.js');
 const Match = require('./modules/match.js');
 const Bet = require('./modules/Bet.js');
-const { User, EasyUser, MediumUser, HardUser } = require('./models/User.js');
+const { User, EasyUser, MediumUser, HardUser } = require('./modules/User.js');
 
-const matchObjects = liatOfMatches.map(data => new Match(data));
+const matchObjects = listOfMatches.map(data => new Match(data));
 // console.log(matchObjects[0]);
 
 const readline = require('readline');
@@ -40,9 +40,7 @@ function askUserType() {
   });
 }
 
-
 askUserType();
-
 
 function showAvailableMatches() {
   console.log("\nAvailable matches:");
