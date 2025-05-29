@@ -8,10 +8,10 @@ const matches = [
       B: 2.3,
       draw: 3.8,
       bothToScoreTrue: 1.4,
-      bothToScoreFlase: 2.75
+      bothToScoreFalse: 2.75
     },
     result: {
-      winner: "A",
+      winner: "Barcelona",
       bothToScore: true
     }
   },
@@ -27,7 +27,7 @@ const matches = [
       bothToScoreFalse: 1.7
     },
     result: {
-      winner: "A",
+      winner: "Tottenham",
       bothToScore: false
     }
   },
@@ -43,7 +43,7 @@ const matches = [
       bothToScoreFalse: 2.2
     },
     result: {
-      winner: "A",
+      winner: "Paris Saint-Germain",
       bothToScore: true
     }
   },
@@ -59,7 +59,7 @@ const matches = [
       bothToScoreFalse: 2.5
     },
     result: {
-      winner: "A",
+      winner: "Chelsea",
       bothToScore: true
     }
   },
@@ -75,7 +75,7 @@ const matches = [
       bothToScoreFalse: 1.95
     },
     result: {
-      winner: "A",
+      winner: "Bournemouth",
       bothToScore: false
     }
   },
@@ -155,7 +155,7 @@ const matches = [
       bothToScoreFalse: 3.1
     },
     result: {
-      winner: "B",
+      winner: "Bayer 04",
       bothToScore: true
     }
   },
@@ -179,6 +179,16 @@ class Match {
     isBothToScore = this.result.bothToScore === true ? "Yes" : "No";
     return `${this.getMatchTitle()} — Winner: ${this.result.winner}, Both scores: ${isBothToScore}`;
   }  
+
+  getCoefSummary() {
+    return `${this.getMatchTitle()} — Coefficients:
+      ${this.teamA}: ${this.coef.A},
+      ${this.teamB}: ${this.coef.B},
+      Draw: ${this.coef.draw};
+      Both Team To Score:
+      Yes - ${this.coef.bothToScoreTrue},
+      No - ${this.coef.bothToScoreFalse}`
+  } 
 }
 
 const matchObjects = matches.map(data => new Match(data));
