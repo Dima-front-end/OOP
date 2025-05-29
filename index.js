@@ -177,7 +177,7 @@ class Match {
   getResultSummary() {
     let isBothToScore;
     isBothToScore = this.result.bothToScore === true ? "Yes" : "No";
-    return `${this.getMatchTitle()} — Winner: ${this.result.winner}, Both scores: ${isBothToScore}`;
+    return `[${this.getFormattedDate()}] ${this.getMatchTitle()} — Winner: ${this.result.winner}, Both scores: ${isBothToScore}`;
   }  
 
   getCoefSummary() {
@@ -188,7 +188,12 @@ class Match {
       Both Team To Score:
       Yes - ${this.coef.bothToScoreTrue},
       No - ${this.coef.bothToScoreFalse}`
-  } 
+  }
+  getFormattedDate() {
+    const [year, month, day] = this.date.split("-");
+    return `${day}.${month}.${year}`;
+  }
+
 }
 
 const matchObjects = matches.map(data => new Match(data));
