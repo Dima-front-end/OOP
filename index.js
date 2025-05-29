@@ -64,11 +64,31 @@ class Bet {
   }
 }
 
-class User {
-  constructor(initialBalance = 100) {
+class Participant {
+  constructor(name, initialBalance) {
+    this.name = name;
+    this.balance = initialBalance;
+    this.bets = [];
+  }
+
+  getRole() {
+    return "Participant";
+  }
+
+  interact() {
+    console.log(`${this.name} interacts with the system.`);
+  }
+}
+
+class User{
+  constructor(initialBalance) {
     this.balance = initialBalance;
     this.bets = [];
     this.initialBalance = initialBalance;
+  }
+
+  getDifficultyName() {
+    return "Unknown";
   }
 
   placeBet(bet) {
@@ -79,6 +99,10 @@ class User {
     this.balance -= bet.amount;
     this.bets.push(bet);
     return true;
+  }
+
+  getWelcomeMessage() {
+    return `Welcome, regular user! Your balance is ${this.balance}`;
   }
 
   resolveAllBets(matchObjects) {
@@ -103,6 +127,37 @@ class User {
   }
 }
 
+class EasyUser extends User {
+  constructor() {
+    super(150);
+  }
+
+  getDifficultyName() {
+    return "Easy";
+  }
+}
+
+class MediumUser extends User {
+  constructor() {
+    super(100);
+  }
+
+  getDifficultyName() {
+    return "Medium";
+  }
+}
+
+class HardUser extends User {
+  constructor() {
+    super(50);
+  }
+
+  getDifficultyName() {
+    return "Hard";
+  }
+}
+
+
 const readline = require('readline');
 
 const rl = readline.createInterface({
@@ -110,7 +165,36 @@ const rl = readline.createInterface({
   output: process.stdout
 });
 
-const user = new User();
+let user;
+
+function askUserType() {
+  rl.question("Choose difficulty (easy / medium / hard): ", (answer) => {
+    switch(answer.toLowerCase()) {
+      case "easy":
+        user = new EasyUser();
+        console.log("You selected Easy difficulty. Starting balance: 150");
+        break;
+      case "medium":
+        user = new MediumUser();
+        console.log("You selected Medium difficulty. Starting balance: 100");
+        break;
+      case "hard":
+        user = new HardUser();
+        console.log("You selected Hard difficulty. Starting balance: 50");
+        break;
+      default:
+        console.log("Invalid difficulty. Exiting.");
+        rl.close();
+        return;
+    }
+
+    askBet();
+  });
+}
+
+
+askUserType();
+
 
 function showAvailableMatches() {
   console.log("\nAvailable matches:");
@@ -209,5 +293,3 @@ function askBet() {
     });
   });
 }
-
-askBet();
