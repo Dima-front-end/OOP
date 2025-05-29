@@ -173,6 +173,12 @@ class Match {
   getMatchTitle() {
     return `${this.teamA} vs ${this.teamB}`;
   }
+
+  getResultSummary() {
+    let isBothToScore;
+    isBothToScore = this.result.bothToScore === true ? "Yes" : "No";
+    return `${this.getMatchTitle()} — Winner: ${this.result.winner}, Both scores: ${isBothToScore}`;
+  }  
 }
 
 const matchObjects = matches.map(data => new Match(data));
