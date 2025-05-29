@@ -1,5 +1,6 @@
 const matches = [
   {
+    id: 1,
     teamA: "Barcelona",
     teamB: "Real Madrid",
     date: "2025-05-11",
@@ -16,6 +17,7 @@ const matches = [
     }
   },
   {
+    id: 2,
     teamA: "Tottenham",
     teamB: "Manchester United",
     date: "2025-05-21",
@@ -32,6 +34,7 @@ const matches = [
     }
   },
   {
+    id: 3,
     teamA: "Paris Saint-Germain",
     teamB: "Arsenal",
     date: "2025-05-07",
@@ -48,6 +51,7 @@ const matches = [
     }
   },
   {
+    id: 4,
     teamA: "Chelsea",
     teamB: "Liverpool",
     date: "2025-05-04",
@@ -64,6 +68,7 @@ const matches = [
     }
   },
   {
+    id: 5,
     teamA: "Bournemouth",
     teamB: "Lester City",
     date: "2025-05-25",
@@ -80,6 +85,7 @@ const matches = [
     }
   },
   {
+    id: 6,
     teamA: "Manchester City",
     teamB: "Southampton",
     date: "2025-10-05",
@@ -96,6 +102,7 @@ const matches = [
     }
   },
   {
+    id: 7,
     teamA: "Bayern Munich",
     teamB: "Leipzig FC",
     date: "2025-05-03",
@@ -112,6 +119,7 @@ const matches = [
     }
   },
   {
+    id: 8,
     teamA: "Juventus",
     teamB: "Bologna FC",
     date: "2025-05-04",
@@ -128,6 +136,7 @@ const matches = [
     }
   },
   {
+    id: 9,
     teamA: "Lazio FC",
     teamB: "Inter",
     date: "2025-05-18",
@@ -144,6 +153,7 @@ const matches = [
     }
   },
   {
+    id: 10,
     teamA: "Borussia Dortmund",
     teamB: "Bayer 04",
     date: "2025-05-11",
@@ -160,6 +170,8 @@ const matches = [
     }
   },
 ];
+
+const matchObjects = matches.map(data => new Match(data));
 
 class Match {
   constructor({ teamA, teamB, date, coef, result }) {
@@ -189,6 +201,7 @@ class Match {
       Yes - ${this.coef.bothToScoreTrue},
       No - ${this.coef.bothToScoreFalse}`
   }
+
   getFormattedDate() {
     const [year, month, day] = this.date.split("-");
     return `${day}.${month}.${year}`;
@@ -196,4 +209,27 @@ class Match {
 
 }
 
-const matchObjects = matches.map(data => new Match(data));
+class Bet {
+  constructor(matchId, type, prediction, amount, coef) {
+    this.matchId = matchId;
+    this.type = type;
+    this.prediction = prediction;
+    this.amount = amount;
+    this.coef = coef;
+    this.isResolved = false;
+    this.isWin = null;
+  }
+
+  calculatePotentialWin() {
+    return this.amount * this.coef;
+  }
+  resolve(matchResult) {
+    if (this.type === "winner") {
+      this.isWin = this.prediction === matchResult.winner;
+    } else if (this.type === "bothToScore") {
+      this.isWin = this.prediction === matchResult.bothToScore;
+    }
+
+    this.isResolved = true;
+  }
+}
