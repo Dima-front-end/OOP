@@ -171,10 +171,9 @@ const matches = [
   },
 ];
 
-const matchObjects = matches.map(data => new Match(data));
-
 class Match {
-  constructor({ teamA, teamB, date, coef, result }) {
+  constructor({id, teamA, teamB, date, coef, result }) {
+    this.id = id;
     this.teamA = teamA;
     this.teamB = teamB;
     this.date = date;
@@ -206,8 +205,10 @@ class Match {
     const [year, month, day] = this.date.split("-");
     return `${day}.${month}.${year}`;
   }
-
 }
+
+const matchObjects = matches.map(data => new Match(data));
+// console.log(matchObjects[0]);
 
 class Bet {
   constructor(matchId, type, prediction, amount, coef) {
@@ -231,5 +232,44 @@ class Bet {
     }
 
     this.isResolved = true;
+  }
+}
+
+class User {
+  constructor(initialBalance = 100) {
+    this.balance = initialBalance;
+    this.bets = [];
+    this.initialBalance = initialBalance;
+  }
+
+  placeBet(bet) {
+    if (bet.amount > this.balance) {
+      console.log("Not enough money to bet.");
+      return false;
+    }
+    this.balance -= bet.amount;
+    this.bets.push(bet);
+    return true;
+  }
+
+  resolveAllBets(matchObjects) {
+    for (const bet of this.bets) {
+      if (!bet.isResolved) {
+        const match = matchObjects.find(m => m.id === bet.matchId);
+        if (match) {
+          bet.resolve(match.result);
+          if (bet.isWin) {
+            const winnings = bet.calculatePotentialWin();
+            this.balance += winnings;
+          }
+        }
+      }
+    }
+  }
+
+  showFinalStats() {
+    const profit = this.balance - this.initialBalance;
+    const sign = profit >= 0 ? "+" : "-";
+    console.log(`\nAll bets are completed. Financial result: ${sign}${Math.abs(profit).toFixed(2)}`);
   }
 }
