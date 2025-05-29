@@ -160,3 +160,19 @@ const matches = [
     }
   },
 ];
+
+class Match {
+  constructor({ teamA, teamB, date, coef, result }) {
+    this.teamA = teamA;
+    this.teamB = teamB;
+    this.date = date;
+    this.coef = coef;
+    this.result = result;
+  }
+
+  getMatchTitle() {
+    return `${this.teamA} vs ${this.teamB}`;
+  }
+}
+
+const matchObjects = matches.map(data => new Match(data));
