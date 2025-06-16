@@ -147,3 +147,5 @@ class HardUser extends User {
     return `\nHardcore results: ${sign}${Math.abs(profit).toFixed(2)}`;
   }
 }
+
+module.exports = { User, EasyUser, MediumUser, HardUser };

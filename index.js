@@ -1,10 +1,9 @@
 const listOfMatches = require('./data/listOfMatches.js');
 const Match = require('./modules/match.js');
-const Bet = require('./modules/Bet.js');
+const { WinnerBet, BothToScoreBet } = require('./modules/Bet.js');
 const { User, EasyUser, MediumUser, HardUser } = require('./modules/User.js');
 
 const matchObjects = listOfMatches.map(data => new Match(data));
-// console.log(matchObjects[0]);
 
 const readline = require('readline');
 
@@ -20,15 +19,15 @@ function askUserType() {
     switch(answer.toLowerCase()) {
       case "easy":
         user = new EasyUser();
-        console.log("You selected Easy difficulty. Starting balance: 150");
+        console.log(`You selected Easy difficulty. Starting balance: ${user.balance}`);
         break;
       case "medium":
         user = new MediumUser();
-        console.log("You selected Medium difficulty. Starting balance: 100");
+        console.log(`You selected Medium difficulty. Starting balance: ${user.balance}`);
         break;
       case "hard":
         user = new HardUser();
-        console.log("You selected Hard difficulty. Starting balance: 50");
+        console.log(`You selected Hard difficulty. Starting balance: ${user.balance}`);
         break;
       default:
         console.log("Invalid difficulty. Exiting.");
@@ -102,8 +101,9 @@ function askBet() {
             return;
           }
 
-          let coef;
+          let bet;
           if (type === 'winner') {
+            let coef;
             if (prediction === match.teamA) coef = match.coef.A;
             else if (prediction === match.teamB) coef = match.coef.B;
             else if (prediction === 'draw') coef = match.coef.draw;
@@ -112,25 +112,17 @@ function askBet() {
               askBet();
               return;
             }
+            bet = new WinnerBet(match.id, prediction, amount, coef);
           } else {
-            coef = prediction === true ? match.coef.bothToScoreTrue : match.coef.bothToScoreFalse;
+            const coef = prediction ? match.coef.bothToScoreTrue : match.coef.bothToScoreFalse;
+            bet = new BothToScoreBet(match.id, prediction, amount, coef);
           }
 
-          const bet = new Bet(match.id, type, prediction, amount, coef);
           const success = user.placeBet(bet);
-
+          
           if (success) {
-            const match = matchObjects.find(m => m.id === bet.matchId);
-
-            bet.resolve(match.result);
-            if (bet.isWin) {
-              const winnings = bet.calculatePotentialWin();
-              user.balance += winnings;
-              console.log(`You won the bet! Win: ${winnings.toFixed(2)}`);
-            } else {
-              console.log(`You lost the bet.`);
-            }
-            console.log(`Сurrent balance: ${user.balance.toFixed(2)}`);
+            user.resolveSingleBet(bet, matchObjects);
+            console.log(`Current balance: ${user.balance.toFixed(2)}`);
           }
 
           askBet();
